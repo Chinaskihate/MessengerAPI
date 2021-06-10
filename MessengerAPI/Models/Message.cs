@@ -15,8 +15,8 @@ namespace MessengerAPI.Models
         #region Поля класса.
         private string _subject;
         private string _content;
-        private string _senderEmail;
-        private string _receiverEmail;
+        private int _senderId;
+        private int _receiverId;
         #endregion
 
         /// <summary>
@@ -26,12 +26,12 @@ namespace MessengerAPI.Models
         /// <param name="content"> Содержимое сообщения. </param>
         /// <param name="senderEmail"> Почта отправителя. </param>
         /// <param name="receiverEmail"> Почта получателя. </param>
-        public Message(string subject, string content, string senderEmail, string receiverEmail)
+        public Message(string subject, string content, int senderId, int receiverId)
         {
             Subject = subject;
             Content = content;
-            SenderEmail = senderEmail;
-            ReceiverEmail = receiverEmail;
+            _senderId = senderId;
+            _receiverId = receiverId;
         }
 
         #region Свойства.
@@ -76,37 +76,15 @@ namespace MessengerAPI.Models
         /// Отправитель.
         /// </summary>
         [DataMember]
-        public string SenderEmail
-        {
-            get => _senderEmail;
-            set
-            {
-                if (!EmailChecker.IsValidEmail(value))
-                {
-                    throw new ArgumentException("Incorrect sender email.");
-                }
-
-                _senderEmail = value;
-            }
-        }
+        //TODO: добавить валидацию
+        public int SenderId => _senderId;
 
         /// <summary>
         /// Получатель.
         /// </summary>
         [DataMember]
-        public string ReceiverEmail
-        {
-            get => _receiverEmail;
-            set
-            {
-                if (EmailChecker.IsValidEmail(value))
-                {
-                    throw new ArgumentException("Incorrect receiver email.");
-                }
-
-                _receiverEmail = value;
-            }
-        }
+        //TODO: добавить валидацию
+        public int ReceiverId => _receiverId;
 
         #endregion
     }

@@ -22,8 +22,12 @@ namespace MessengerAPI.Controllers
         [HttpPost("create-user")]
         public IActionResult CreateUser([FromBody] CreateUserRequest req)
         {
+            //TODO: добавить валидацию.
             var user = new User(req.UserName, req.Email);
-            _users.Add(user);
+            if (_users.Any(x => x.Email != req.Email))
+            {
+                _users.Add(user);
+            }
             return Ok(user);
         }
 

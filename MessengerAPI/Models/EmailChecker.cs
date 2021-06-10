@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace MessengerAPI.Models
+﻿namespace MessengerAPI.Models
 {
+    /// <summary>
+    /// Статический класс для проверки почты.
+    /// </summary>
     internal static class EmailChecker
     {
         /// <summary>

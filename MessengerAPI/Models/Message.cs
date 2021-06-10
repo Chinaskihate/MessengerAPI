@@ -23,7 +23,7 @@ namespace MessengerAPI.Models
         /// <param name="content"> Содержимое сообщения. </param>
         /// <param name="senderId"> Почта отправителя. </param>
         /// <param name="receiverId"> Почта получателя. </param>
-        public Message(string subject, string content, int senderId, int receiverId)
+        private Message(string subject, string content, int senderId, int receiverId)
         {
             Subject = subject;
             Content = content;
@@ -82,6 +82,32 @@ namespace MessengerAPI.Models
         [DataMember]
         //TODO: добавить валидацию
         public int ReceiverId => _receiverId;
+
+        #endregion
+
+        #region Методы
+
+        /// <summary>
+        /// Метод для создания сообщений.
+        /// </summary>
+        /// <param name="subject"> Тема сообщения. </param>
+        /// <param name="content"> Содержимое сообщения. </param>
+        /// <param name="senderId"> ID отправителя. </param>
+        /// <param name="receiverId"> ID получателя. </param>
+        /// <returns></returns>
+        public static Message Parse(string subject, string content, int senderId, int receiverId)
+        {
+            if (string.IsNullOrEmpty(subject))
+            {
+                throw new ArgumentException("Empty message subject.");
+            }
+            if (string.IsNullOrEmpty(content))
+            {
+                throw new ArgumentException("Empty message content.");
+            }
+
+            return new Message(subject, content, senderId, receiverId);
+        }
 
         #endregion
     }

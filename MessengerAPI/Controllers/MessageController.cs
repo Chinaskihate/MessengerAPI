@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using MessengerAPI.Models;
+using System;
 
 namespace MessengerAPI.Controllers
 {
@@ -22,8 +23,23 @@ namespace MessengerAPI.Controllers
         [HttpPost("/send-message")]
         public IActionResult SendMessage([FromBody] SendMessageRequest req)
         {
-            //TODO: добавить валидацию.
-            Message message = new Message(req.Subject, req.Content, req.SenderId, req.ReceiverId);
+            Message message = null;
+            try
+            {
+                message = Message.Parse(req.Subject, req.Content, req.SenderId, req.ReceiverId);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            if (_messages.TrueForAll(x => x.ReceiverId != req.ReceiverId))
+            {
+                return BadRequest($"Receiver {req.ReceiverId} doesn't exist.");
+            }
+            if (_messages.TrueForAll(x => x.SenderId != req.SenderId))
+            {
+                return BadRequest($"Receiver {req.SenderId} doesn't exist.");
+            }
             _messages.Add(message);
             return Ok(message);
         }

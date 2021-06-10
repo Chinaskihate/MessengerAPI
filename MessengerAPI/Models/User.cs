@@ -26,7 +26,7 @@ namespace MessengerAPI.Models
             UserName = username;
             Email = email;
             // TODO: переделать систему ID.
-            _id = _count++;
+            Id = _count++;
         }
 
         #region Свойства.
@@ -71,7 +71,14 @@ namespace MessengerAPI.Models
         /// Id пользователя.
         /// </summary>
         [DataMember]
-        public int Id => _id;
+        public int Id
+        {
+            get => _id;
+            private set
+            {
+                _id = value;
+            }
+        }
 
         #endregion
 

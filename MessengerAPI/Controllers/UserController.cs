@@ -3,6 +3,8 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using MessengerAPI.Models;
 using System;
+using System.IO;
+using System.Runtime.Serialization.Json;
 
 namespace MessengerAPI.Controllers
 {
@@ -16,14 +18,22 @@ namespace MessengerAPI.Controllers
         /// </summary>
         static UserController()
         {
-            //TODO: добавить загрузку из файла.
-            Users = new List<User>();
+            DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(List<User>));
+            try
+            {
+                using (FileStream fs = new FileStream("users.json", FileMode.Open))
+                    Users = ser.ReadObject(fs) as List<User>;
+            }
+            catch
+            {
+                Users = new List<User>();
+            };
         }
 
         /// <summary>
         /// Список пользователей.
         /// </summary>
-        internal static List<User> Users{get;set;}
+        internal static List<User> Users { get; set; }
 
         /// <summary>
         /// Создает пользователя.
@@ -38,15 +48,22 @@ namespace MessengerAPI.Controllers
             {
                 user = Models.User.Parse(req.UserName, req.Email);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-            if (Users.Any(x => x.Email != req.Email))
+            if (Users.Count == 0 || Users.Any(x => x.Email != req.Email))
             {
                 Users.Add(user);
                 Users = Users.OrderBy(x => x.Email).ToList();
             }
+            DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(List<User>));
+            try
+            {
+                using (FileStream fs = new FileStream("users.json", FileMode.OpenOrCreate))
+                    ser.WriteObject(fs, Users);
+            }
+            catch { };
             return Ok(user);
         }
 

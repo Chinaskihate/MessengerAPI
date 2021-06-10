@@ -3,6 +3,8 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using MessengerAPI.Models;
 using System;
+using System.Runtime.Serialization.Json;
+using System.IO;
 
 namespace MessengerAPI.Controllers
 {
@@ -16,8 +18,16 @@ namespace MessengerAPI.Controllers
         /// </summary>
         static MessageController()
         {
-            // TODO: добавить загрузку из файла.
-            Messages = new List<Message>();
+            DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(List<Message>));
+            try
+            {
+                using (FileStream fs = new FileStream("messages.json", FileMode.Open))
+                    Messages = ser.ReadObject(fs) as List<Message>;
+            }
+            catch
+            {
+                Messages = new List<Message>();
+            };
         }
 
         /// <summary>
@@ -51,6 +61,13 @@ namespace MessengerAPI.Controllers
                 return NotFound($"Receiver {req.SenderId} doesn't exist.");
             }
             Messages.Add(message);
+            DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(List<Message>));
+            try
+            {
+                using (FileStream fs = new FileStream("message.json", FileMode.OpenOrCreate))
+                    ser.WriteObject(fs, Messages);
+            }
+            catch { };
             return Ok(message);
         }
 

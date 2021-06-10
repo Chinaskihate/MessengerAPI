@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using MessengerAPI.Models;
 using System.IO;
 using System;
+using System.Runtime.Serialization.Json;
 
 namespace MessengerAPI.Controllers
 {
@@ -17,6 +18,9 @@ namespace MessengerAPI.Controllers
         private static Random rnd = new Random();
         #endregion
 
+        /// <summary>
+        /// Статический конструктор.
+        /// </summary>
         static RandomGeneratorController()
         {
             text = System.IO.File.ReadAllLines("text.txt").ToList();
@@ -37,8 +41,27 @@ namespace MessengerAPI.Controllers
             {
                 return BadRequest("The number of messages must be in the range from 0 to 100.");
             }
+
             UserController.Users = CreateRandomUsers(usersCount);
+            DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(List<User>));
+            try
+            {
+                using (FileStream fs = new FileStream("users.json", FileMode.OpenOrCreate))
+                    ser.WriteObject(fs, UserController.Users);
+            }
+            catch (Exception ex)
+            {
+                string foo = ex.Message;
+            };
+
             MessageController.Messages = CreateRandomMessages(UserController.Users, messagesCount);
+            ser = new DataContractJsonSerializer(typeof(List<Message>));
+            try
+            {
+                using (FileStream fs = new FileStream("messages.json", FileMode.OpenOrCreate))
+                    ser.WriteObject(fs, MessageController.Messages);
+            }
+            catch { };
             return Ok("Random users and messages are created.");
         }
 

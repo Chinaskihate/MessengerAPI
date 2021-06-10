@@ -27,8 +27,8 @@ namespace MessengerAPI.Models
         {
             Subject = subject;
             Content = content;
-            _senderId = senderId;
-            _receiverId = receiverId;
+            SenderId = senderId;
+            ReceiverId = receiverId;
         }
 
         #region Свойства.
@@ -74,14 +74,28 @@ namespace MessengerAPI.Models
         /// </summary>
         [DataMember]
         //TODO: добавить валидацию
-        public int SenderId => _senderId;
+        public int SenderId
+        {
+            get => _senderId;
+            private set
+            {
+                _senderId = value;
+            }
+        }
 
         /// <summary>
         /// Получатель.
         /// </summary>
         [DataMember]
         //TODO: добавить валидацию
-        public int ReceiverId => _receiverId;
+        public int ReceiverId
+        {
+            get => _receiverId;
+            private set
+            {
+                _receiverId = value;
+            }
+        }
 
         #endregion
 

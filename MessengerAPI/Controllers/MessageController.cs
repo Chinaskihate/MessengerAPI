@@ -11,9 +11,19 @@ namespace MessengerAPI.Controllers
     /// </summary>
     public class MessageController : Controller
     {
-        #region Поля класса.
-        private static List<Message> _messages = new List<Message>();
-        #endregion
+        /// <summary>
+        /// Статический конструктор.
+        /// </summary>
+        static MessageController()
+        {
+            // TODO: добавить загрузку из файла.
+            Messages = new List<Message>();
+        }
+
+        /// <summary>
+        /// Список сообщений.
+        /// </summary>
+        internal static List<Message> Messages { get; set; }
 
         /// <summary>
         /// Отправление сообщения.
@@ -28,19 +38,19 @@ namespace MessengerAPI.Controllers
             {
                 message = Message.Parse(req.Subject, req.Content, req.SenderId, req.ReceiverId);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-            if (_messages.TrueForAll(x => x.ReceiverId != req.ReceiverId))
+            if (Messages.TrueForAll(x => x.ReceiverId != req.ReceiverId))
             {
-                return BadRequest($"Receiver {req.ReceiverId} doesn't exist.");
+                return NotFound($"Receiver {req.ReceiverId} doesn't exist.");
             }
-            if (_messages.TrueForAll(x => x.SenderId != req.SenderId))
+            if (Messages.TrueForAll(x => x.SenderId != req.SenderId))
             {
-                return BadRequest($"Receiver {req.SenderId} doesn't exist.");
+                return NotFound($"Receiver {req.SenderId} doesn't exist.");
             }
-            _messages.Add(message);
+            Messages.Add(message);
             return Ok(message);
         }
 
@@ -53,8 +63,8 @@ namespace MessengerAPI.Controllers
         [HttpGet("/get-messages")]
         public IActionResult GetMessagesBySenderAndReceiver([FromQuery] int senderId, [FromQuery] int receiverId)
         {
-            var result = _messages.Where(x => x.SenderId == senderId 
-                                           && x.ReceiverId== receiverId);
+            var result = Messages.Where(x => x.SenderId == senderId
+                                           && x.ReceiverId == receiverId);
             return Ok(result);
         }
 
@@ -66,7 +76,7 @@ namespace MessengerAPI.Controllers
         [HttpGet("/get-messages-by-sender")]
         public IActionResult GetMessagesBySender([FromQuery] int senderId)
         {
-            var result = _messages.Where(x => x.SenderId == senderId);
+            var result = Messages.Where(x => x.SenderId == senderId);
             return Ok(result);
         }
 
@@ -78,7 +88,7 @@ namespace MessengerAPI.Controllers
         [HttpGet("/get-messages-by-receiver")]
         public IActionResult GetMessagesByReceiver([FromQuery] int receiverId)
         {
-            var result = _messages.Where(x => x.ReceiverId == receiverId);
+            var result = Messages.Where(x => x.ReceiverId == receiverId);
             return Ok(result);
         }
     }

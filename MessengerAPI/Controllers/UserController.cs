@@ -11,9 +11,19 @@ namespace MessengerAPI.Controllers
     /// </summary>
     public class UserController : Controller
     {
-        #region Поля класса.
-        private static List<User> _users = new List<User>();
-        #endregion
+        /// <summary>
+        /// Статический конструктор.
+        /// </summary>
+        static UserController()
+        {
+            //TODO: добавить загрузку из файла.
+            Users = new List<User>();
+        }
+
+        /// <summary>
+        /// Список пользователей.
+        /// </summary>
+        internal static List<User> Users{get;set;}
 
         /// <summary>
         /// Создает пользователя.
@@ -32,10 +42,10 @@ namespace MessengerAPI.Controllers
             {
                 return BadRequest(ex.Message);
             }
-            if (_users.Any(x => x.Email != req.Email))
+            if (Users.Any(x => x.Email != req.Email))
             {
-                _users.Add(user);
-                _users = _users.OrderBy(x => x.Email).ToList();
+                Users.Add(user);
+                Users = Users.OrderBy(x => x.Email).ToList();
             }
             return Ok(user);
         }
@@ -48,7 +58,7 @@ namespace MessengerAPI.Controllers
         [HttpGet("get-user-by-email")]
         public IActionResult GetUserById([FromQuery] string email)
         {
-            var result = _users.Where(x => x.Email == email).ToList();
+            var result = Users.Where(x => x.Email == email).ToList();
             if (result.Count == 0)
             {
                 return NotFound(new { Message = $"Пользователь с почтой {email} не найден" });
@@ -71,8 +81,16 @@ namespace MessengerAPI.Controllers
             {
                 return BadRequest("Limit must be positive.");
             }
-
-            return Ok(_users.GetRange(offset, limit));
+            var result = new List<User>();
+            for (int i = offset; i < limit; i++)
+            {
+                if (i == Users.Count)
+                {
+                    break;
+                }
+                result.Add(Users[i]);
+            }
+            return Ok(result);
         }
     }
 }

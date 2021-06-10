@@ -10,7 +10,7 @@ namespace MessengerAPI.Models
     public class User
     {
         #region Поля класса.
-        private static int _count = 1;
+        private static int _count = 0;
         private string _userName;
         private string _email;
         private int _id;

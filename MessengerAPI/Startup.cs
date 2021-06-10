@@ -29,7 +29,7 @@ namespace MessengerAPI
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",
-                    Title = "MessageAPI"
+                    Title = "MessengerAPI"
                 });
 
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
@@ -42,7 +42,7 @@ namespace MessengerAPI
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseSwagger();
-            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "MessageAPI V1"); });
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "MessengerAPI V1"); });
 
             if (env.IsDevelopment())
             {

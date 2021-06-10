@@ -35,6 +35,7 @@ namespace MessengerAPI.Controllers
             if (_users.Any(x => x.Email != req.Email))
             {
                 _users.Add(user);
+                _users = _users.OrderBy(x => x.Email).ToList();
             }
             return Ok(user);
         }
@@ -60,6 +61,18 @@ namespace MessengerAPI.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("get-all-users")]
-        public IActionResult GetAllUsers() => Ok(_users);
+        public IActionResult GetAllUsers([FromQuery] int limit, int offset)
+        {
+            if (offset < 0)
+            {
+                return BadRequest("Offest can't be negative.");
+            }
+            if (limit <= 0)
+            {
+                return BadRequest("Limit must be positive.");
+            }
+
+            return Ok(_users.GetRange(offset, limit));
+        }
     }
 }

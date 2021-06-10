@@ -10,8 +10,10 @@ namespace MessengerAPI.Models
     public class User
     {
         #region Поля класса.
+        private static long _count = 1;
         private string _userName;
         private string _email;
+        private long _id;
         #endregion
 
         /// <summary>
@@ -23,6 +25,8 @@ namespace MessengerAPI.Models
         {
             UserName = userName;
             Email = email;
+            // TODO: переделать систему ID.
+            _id = _count++;
         }
 
         #region Свойства
@@ -34,7 +38,7 @@ namespace MessengerAPI.Models
         public string UserName
         {
             get => _userName;
-            set
+            private set
             {
                 if (string.IsNullOrEmpty(value))
                 {
@@ -62,6 +66,12 @@ namespace MessengerAPI.Models
                 _email = value;
             }
         }
+
+        /// <summary>
+        /// Id пользователя.
+        /// </summary>
+        [DataMember]
+        public long Id => _id;
 
         #endregion
     }

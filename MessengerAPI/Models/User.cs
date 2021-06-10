@@ -19,17 +19,17 @@ namespace MessengerAPI.Models
         /// <summary>
         /// Конструткор.
         /// </summary>
-        /// <param name="userName"> Имя пользователя. </param>
+        /// <param name="username"> Имя пользователя. </param>
         /// <param name="email"> Почта пользователя. </param>
-        public User(string userName, string email)
+        private User(string username, string email)
         {
-            UserName = userName;
+            UserName = username;
             Email = email;
             // TODO: переделать систему ID.
             _id = _count++;
         }
 
-        #region Свойства
+        #region Свойства.
 
         /// <summary>
         /// Имя пользователя.
@@ -72,6 +72,30 @@ namespace MessengerAPI.Models
         /// </summary>
         [DataMember]
         public int Id => _id;
+
+        #endregion
+
+        #region Методы.
+
+        /// <summary>
+        /// Метод для создания пользователей.
+        /// </summary>
+        /// <param name="username"> Имя пользователя. </param>
+        /// <param name="email"> Почта пользователя. </param>
+        /// <returns></returns>
+        public static User Parse(string username, string email)
+        {
+            if (string.IsNullOrEmpty(username))
+            {
+                throw new ArgumentException("Username is null or empty.");
+            }
+            if (!EmailChecker.IsValidEmail(email))
+            {
+                throw new ArgumentException("Incorrect email.");
+            }
+
+            return new User(username, email);
+        }
 
         #endregion
     }

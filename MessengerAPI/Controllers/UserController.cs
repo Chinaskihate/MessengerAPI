@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using MessengerAPI.Models;
+using System;
 
 namespace MessengerAPI.Controllers
 {
@@ -22,8 +23,15 @@ namespace MessengerAPI.Controllers
         [HttpPost("create-user")]
         public IActionResult CreateUser([FromBody] CreateUserRequest req)
         {
-            //TODO: добавить валидацию.
-            var user = new User(req.UserName, req.Email);
+            User user = null;
+            try
+            {
+                user = Models.User.Parse(req.UserName, req.Email);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
             if (_users.Any(x => x.Email != req.Email))
             {
                 _users.Add(user);

@@ -10,10 +10,10 @@ namespace MessengerAPI.Models
     public class User
     {
         #region Поля класса.
-        private static long _count = 1;
+        private static int _count = 1;
         private string _userName;
         private string _email;
-        private long _id;
+        private int _id;
         #endregion
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace MessengerAPI.Models
         /// Id пользователя.
         /// </summary>
         [DataMember]
-        public long Id => _id;
+        public int Id => _id;
 
         #endregion
     }

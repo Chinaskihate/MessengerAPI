@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Threading.Tasks;
 
 namespace MessengerAPI.Models
 {
@@ -24,8 +21,8 @@ namespace MessengerAPI.Models
         /// </summary>
         /// <param name="subject"> Тема сообщения. </param>
         /// <param name="content"> Содержимое сообщения. </param>
-        /// <param name="senderEmail"> Почта отправителя. </param>
-        /// <param name="receiverEmail"> Почта получателя. </param>
+        /// <param name="senderId"> Почта отправителя. </param>
+        /// <param name="receiverId"> Почта получателя. </param>
         public Message(string subject, string content, int senderId, int receiverId)
         {
             Subject = subject;
